@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+option go_package = "../pb";
+package alefbookstores.quotes;
+
+import "alefbookstores_common.proto";
+import "google/protobuf/wrappers.proto";
+
+service AlefBookStoresQuotesService {
+  rpc AddQuoteByAuthor(QuoteAddRequest) returns (Quote);
+  rpc AddQuoteByBook(QuoteAddRequest) returns (Quote);
+  rpc UpdateQuote(Quote) returns (Quote);
+  rpc DeleteQuote(google.protobuf.StringValue) returns (Quote);
+  rpc GetQuotesByAuthor(google.protobuf.StringValue) returns (stream Quote);
+  rpc GetQuotesByBook(google.protobuf.StringValue) returns (stream Quote);
+  rpc GetQuotesByUser(google.protobuf.StringValue) returns (stream Quote);
+}
+
+message QuoteAddRequest {
+  string text = 1;
+  Author author = 2;
+  AlefBookStoresBook book = 3;
+}
+
+message QuoteDeleteRequest {
+  string text = 1;
+  Author author = 2;
+  AlefBookStoresBook book = 3;
+}
+
+message QuoteUpdateRequest {
+  string text = 1;
+  Author author = 2;
+  AlefBookStoresBook book = 3;
+}
+
+message Quote {
+  string userId = 1;
+  string text = 2;
+  Author author = 3;
+  AlefBookStoresBook book = 4;
+  int64 votes = 5;
+}

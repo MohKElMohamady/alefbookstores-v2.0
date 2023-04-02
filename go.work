@@ -1,4 +1,7 @@
 go 1.20
 
 use (
+	./alefbookstores-bibliotheca
+	./alefbookstores-quotes-service
+	./alefbookstores-search-service
 )

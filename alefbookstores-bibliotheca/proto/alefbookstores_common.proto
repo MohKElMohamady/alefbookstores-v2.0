@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package alefbookstores.common;
+option go_package = "../pb";
+
+message AlefBookStoresBook {
+  string id = 1;
+  string etag = 2;
+  string self_link = 3;
+  string title = 4;
+  string subtitle = 5;
+  string authors = 6;
+  string publisher = 7;
+  string published_date = 8;
+  string isbn10 = 9;
+  string isbn13 = 10;
+  string page_count = 11;
+  double price = 12;
+  repeated string categories = 13;
+  double average_rating = 15;
+  int64 ratings_count = 16;
+  string language = 17;
+  string preview_link = 18;
+  string info_link = 19;
+  bool is_ebook_availablbe = 20;
+}
+
+message Author {
+  string key = 1;
+  string name = 2;
+  string personal_name = 3;
+  string birth_date = 4;
+  string death_date = 5;
+  string bio = 6;
+  repeated int64 photos = 7;
+  string website_link = 8;
+  string wikipedia_link = 9;
+}
