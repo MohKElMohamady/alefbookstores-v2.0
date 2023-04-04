@@ -1,16 +1,18 @@
 package routers
 
+import "alefbookstores-bibliotheca/pb"
+
 type requestError struct {
 	message string `json:"message"`
 }
 
-type book struct {
+type Book struct {
 	BookId           string   `json:"bookId"`
 	Etag             string   `json:"etag"`
 	SelfLink         string   `json:"selfLink"`
 	Title            string   `json:"title"`
 	Subtitle         string   `json:"subtitle"`
-	Authors          []author `json:"authors"`
+	Authors          []Author `json:"authors"`
 	Publisher        string   `json:"publisher"`
 	PublisherDate    string   `json:"publisherDate"`
 	Isbn10           string   `json:"isbn10"`
@@ -26,7 +28,35 @@ type book struct {
 	IsEbookAvailable bool     `json:"isEbookAvailable"`
 }
 
-type author struct {
+func BookFromGrpc(b *pb.AlefBookStoresBook) Book {
+	authors := []Author{}
+	for _, author := range b.Authors {
+		authors = append(authors, Author{Name: author})
+	}
+	return Book{
+		BookId:           b.Id,
+		Etag:             b.Etag,
+		SelfLink:         b.SelfLink,
+		Title:            b.Title,
+		Subtitle:         b.Subtitle,
+		Authors:          authors,
+		Publisher:        b.Publisher,
+		PublisherDate:    b.PublishedDate,
+		Isbn10:           b.Isbn10,
+		Isbn13:           b.Isbn13,
+		PageCount:        b.PageCount,
+		Price:            b.Price,
+		Categories:       b.Categories,
+		AverageRating:    b.AverageRating,
+		RatingCounts:     b.RatingsCount,
+		Language:         b.Language,
+		PreviewLink:      b.PreviewLink,
+		InfoLink:         b.InfoLink,
+		IsEbookAvailable: b.IsEbookAvailable,
+	}
+}
+
+type Author struct {
 	AuthorId      string  `json:"authorId"`
 	Name          string  `json:"name"`
 	PersonalName  string  `json:"personalName"`
@@ -38,11 +68,25 @@ type author struct {
 	WikipediaLink string  `json:"wikipediaLink"`
 }
 
-type quote struct {
+func AuthorFromGrpc(a *pb.Author) Author {
+	return Author{
+		AuthorId:      a.Key,
+		Name:          a.Name,
+		PersonalName:  a.PersonalName,
+		BirthDate:     a.BirthDate,
+		DeathDate:     a.DeathDate,
+		Bio:           a.Bio,
+		Photos:        a.Photos,
+		WebsiteLink:   a.WebsiteLink,
+		WikipediaLink: a.WikipediaLink,
+	}
+}
+
+type Quote struct {
 	QuoteId string `json:"quoteId"`
 	Text    string `json:"text"`
-	Book    book   `json:"book"`
-	Author  author `json:"author"`
+	Book    Book   `json:"Book"`
+	Author  Author `json:"Author"`
 }
 
 type QuoteCreationDto struct {
