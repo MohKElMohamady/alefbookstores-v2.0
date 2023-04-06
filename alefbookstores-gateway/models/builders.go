@@ -1,6 +1,11 @@
-package routers
+package responses
 
-import "fmt"
+import (
+	"fmt"
+)
+import (
+	"alefbookstores-bibliotheca/pb"
+)
 
 type BookBuilder struct {
 	bookId           string
@@ -8,7 +13,7 @@ type BookBuilder struct {
 	selfLink         string
 	title            string
 	subtitle         string
-	authors          []author
+	authors          []Author
 	publisher        string
 	publisherDate    string
 	isbn10           string
@@ -28,21 +33,25 @@ func NewBookBuilder() *BookBuilder {
 	return &BookBuilder{}
 }
 
-func (b BookBuilder) Build() (book, error) {
+func NewBookBuilderFromGrpc(book pb.AlefBookStoresBook) {
+
+}
+
+func (b BookBuilder) Build() (Book, error) {
 
 	if b.bookId == "" {
-		return book{}, fmt.Errorf("a book must have an id")
+		return Book{}, fmt.Errorf("a Book must have an id")
 	}
 
 	if b.title == "" {
-		return book{}, fmt.Errorf("a book must have a title")
+		return Book{}, fmt.Errorf("a Book must have a title")
 	}
 
 	if len(b.authors) == 0 {
-		return book{}, fmt.Errorf("a book must have at least one author")
+		return Book{}, fmt.Errorf("a Book must have at least one Author")
 	}
 
-	return book{
+	return Book{
 		BookId:           b.bookId,
 		Etag:             b.etag,
 		SelfLink:         b.selfLink,
@@ -90,7 +99,7 @@ func (b *BookBuilder) SubTitle(subtitle string) *BookBuilder {
 	return b
 }
 
-func (b *BookBuilder) Authors(authors ...author) *BookBuilder {
+func (b *BookBuilder) Authors(authors ...Author) *BookBuilder {
 	b.authors = authors
 	return b
 }
@@ -172,16 +181,16 @@ type AuthorBuilder struct {
 	wikipediaLink string
 }
 
-func (a AuthorBuilder) Build() (author, error) {
+func (a AuthorBuilder) Build() (Author, error) {
 
 	if a.authorId == "" {
-		return author{}, fmt.Errorf("cannot create an author without the id")
+		return Author{}, fmt.Errorf("cannot create an Author without the id")
 	}
 	if a.name == "" {
-		return author{}, fmt.Errorf("cannot create an author without his/her name")
+		return Author{}, fmt.Errorf("cannot create an Author without his/her name")
 	}
 
-	return author{
+	return Author{
 		AuthorId:      a.authorId,
 		Name:          a.name,
 		PersonalName:  a.personalName,

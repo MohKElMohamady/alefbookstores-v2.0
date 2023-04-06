@@ -1,8 +1,8 @@
 syntax = "proto3";
 
 option go_package = "../pb";
-import "google/protobuf/wrappers.proto";
 import "alefbookstores_common.proto";
+import "google/protobuf/wrappers.proto";
 
 service AlefBookstoresSearchService {
   rpc SearchForBookByTitle(google.protobuf.StringValue) returns (stream alefbookstores.common.AlefBookStoresBook);

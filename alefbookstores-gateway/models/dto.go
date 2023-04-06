@@ -1,6 +1,11 @@
-package routers
+package responses
 
-import "alefbookstores-bibliotheca/pb"
+import (
+	"alefbookstores-bibliotheca/pb"
+	"encoding/json"
+	"fmt"
+	"log"
+)
 
 type requestError struct {
 	message string `json:"message"`
@@ -112,4 +117,17 @@ func RequestError(reason string) requestError {
 	return requestError{
 		message: reason,
 	}
+}
+
+func JsonParsingError(failedToParsedObj interface{}, reason error) []byte {
+	errMsg := requestError{
+		message: fmt.Sprintf("failed to encode the object from json to bytes %s because %s\n", failedToParsedObj, reason),
+	}
+
+	errorMsgInBytes, err := json.Marshal(errMsg)
+	if err != nil {
+		log.Fatalln("even parsing this didn't succeed, terminating...")
+	}
+
+	return errorMsgInBytes
 }

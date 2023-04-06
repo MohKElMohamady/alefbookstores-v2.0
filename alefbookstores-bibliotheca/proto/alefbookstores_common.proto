@@ -9,12 +9,12 @@ message AlefBookStoresBook {
   string self_link = 3;
   string title = 4;
   string subtitle = 5;
-  string authors = 6;
+  repeated string authors = 6;
   string publisher = 7;
   string published_date = 8;
   string isbn10 = 9;
   string isbn13 = 10;
-  string page_count = 11;
+  int64 page_count = 11;
   double price = 12;
   repeated string categories = 13;
   double average_rating = 15;
@@ -22,7 +22,7 @@ message AlefBookStoresBook {
   string language = 17;
   string preview_link = 18;
   string info_link = 19;
-  bool is_ebook_availablbe = 20;
+  bool is_ebook_available = 20;
 }
 
 message Author {
