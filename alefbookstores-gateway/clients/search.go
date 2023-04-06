@@ -2,7 +2,7 @@ package clients
 
 import (
 	"alefbookstores-bibliotheca/pb"
-	"alefbookstores-gateway/routers"
+	"alefbookstores-gateway/models"
 	"context"
 	"fmt"
 	"google.golang.org/grpc"
@@ -35,8 +35,8 @@ func init() {
 type SearchClient struct {
 }
 
-func (c SearchClient) SearchForBookByTitle(ctx context.Context, title string) ([]routers.Book, error) {
-	books := []routers.Book{}
+func (c SearchClient) SearchForBookByTitle(ctx context.Context, title string) ([]models.Book, error) {
+	books := []models.Book{}
 
 	conn := searchServiceConnectionPool.Get().(*grpc.ClientConn)
 
@@ -55,14 +55,14 @@ func (c SearchClient) SearchForBookByTitle(ctx context.Context, title string) ([
 		if err != nil {
 			log.Printf("failed to receive one book, %s", err)
 		}
-		books = append(books, routers.BookFromGrpc(book))
+		books = append(books, models.BookFromGrpc(book))
 	}
 
 	return books, nil
 }
 
-func (c SearchClient) SearchForBookByAuthor(ctx context.Context, title string) ([]routers.Book, error) {
-	books := []routers.Book{}
+func (c SearchClient) SearchForBookByAuthor(ctx context.Context, title string) ([]models.Book, error) {
+	books := []models.Book{}
 
 	conn := searchServiceConnectionPool.Get().(*grpc.ClientConn)
 
@@ -81,14 +81,14 @@ func (c SearchClient) SearchForBookByAuthor(ctx context.Context, title string) (
 		if err != nil {
 			log.Printf("failed to receive one book, %s", err)
 		}
-		books = append(books, routers.BookFromGrpc(book))
+		books = append(books, models.BookFromGrpc(book))
 	}
 
 	return books, nil
 }
 
-func (c *SearchClient) SearchForAuthor(context context.Context, name string) ([]routers.Author, error) {
-	authors := []routers.Author{}
+func (c *SearchClient) SearchForAuthor(context context.Context, name string) ([]models.Author, error) {
+	authors := []models.Author{}
 
 	conn := searchServiceConnectionPool.Get().(*grpc.ClientConn)
 
@@ -108,7 +108,7 @@ func (c *SearchClient) SearchForAuthor(context context.Context, name string) ([]
 			log.Printf("failed to receive one author %s \n", err)
 		}
 
-		authors = append(authors, routers.AuthorFromGrpc(author))
+		authors = append(authors, models.AuthorFromGrpc(author))
 	}
 
 	return authors, nil
