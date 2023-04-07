@@ -1,6 +1,7 @@
 package cassandra
 
 import (
+	"context"
 	"crypto/tls"
 	"github.com/joho/godotenv"
 	"github.com/stargate/stargate-grpc-go-client/stargate/pkg/auth"
@@ -60,38 +61,68 @@ func init() {
 	}
 }
 
-type ReaderRepository interface {
-	getUserByEmail(email string) User
-	getAllUsers() []User
-	registerUser(user User) User
-	updateUser(user User)
-	deleteUser(user User)
+type ReadersRepository interface {
+	GetUserByEmail(context context.Context, email string) (User, error)
+	getAllUsers(context.Context) ([]User, error)
+	registerUser(context context.Context, user User) (User, error)
+	updateUser(context context.Context, user User) error
+	deleteUser(context context.Context, user User) error
 }
 
-type ReaderCassandraRepository struct {
+type ReadersCassandraRepository struct {
 }
 
-func (r *ReaderCassandraRepository) getUserByEmail(email string) User {
+func (r *ReadersCassandraRepository) GetUserByEmail(context context.Context, email string) (User, error) {
+	c := datastaxConnectionPool.Get().(*client.StargateClient)
+
+	res, err := c.ExecuteQuery(&datastax.Query{
+		Cql: `SELECT * FROM readers.users WHERE email = ?`,
+		Values: &datastax.Values{
+			Values: []*datastax.Value{
+				{
+					Inner: &datastax.Value_String_{String_: email},
+				},
+			},
+		},
+		Parameters: nil,
+	})
+	if err != nil {
+		log.Printf("failed to execute query and fetch the user given the email %s\n", err)
+		return User{}, err
+	}
+
+	resultSet := res.GetResultSet()
+	var foundUser User = User{}
+	for _, user := range resultSet.Rows {
+		foundUser = User{
+			Email:     user.Values[0].GetString_(),
+			FirstName: user.Values[1].GetString_(),
+			LastName:  user.Values[2].GetString_(),
+			Password:  user.Values[3].GetString_(),
+			UserId:    user.Values[4].GetString_(),
+		}
+	}
+	return foundUser, nil
+}
+
+func (r *ReadersCassandraRepository) getAllUsers(ctx context.Context) ([]User, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (r *ReaderCassandraRepository) getAllUsers() []User {
+func (r *ReadersCassandraRepository) registerUser(context context.Context, user User) (User, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (r *ReaderCassandraRepository) registerUser(user User) User {
+func (r *ReadersCassandraRepository) updateUser(context context.Context, user User) error {
 	//TODO implement me
 	panic("implement me")
+	return nil
 }
 
-func (r *ReaderCassandraRepository) updateUser(user User) {
+func (r *ReadersCassandraRepository) deleteUser(context context.Context, user User) error {
 	//TODO implement me
 	panic("implement me")
-}
-
-func (r *ReaderCassandraRepository) deleteUser(user User) {
-	//TODO implement me
-	panic("implement me")
+	return nil
 }

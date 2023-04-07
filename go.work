@@ -4,5 +4,6 @@ use (
 	./alefbookstores-bibliotheca
 	./alefbookstores-gateway
 	./alefbookstores-quotes-service
+	./alefbookstores-readers-service
 	./alefbookstores-search-service
 )
