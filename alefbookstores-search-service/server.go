@@ -1,6 +1,7 @@
 package main
 
 import (
+	"alefbookstores-bibliotheca/builders"
 	bibliotheca "alefbookstores-bibliotheca/pb"
 	"alefbookstores-search-service/kafka"
 	"fmt"
@@ -21,14 +22,38 @@ func NewAlefBookStoresSearchService() AlefBookStoresSearchService {
 	}
 }
 
-func (a AlefBookStoresSearchService) SearchForBookByTitle(value *wrapperspb.StringValue, server bibliotheca.AlefBookstoresSearchService_SearchForBookByTitleServer) error {
-	//TODO implement me
-	panic("implement me")
+func (a AlefBookStoresSearchService) SearchForBookByTitle(v *wrapperspb.StringValue, server bibliotheca.AlefBookstoresSearchService_SearchForBookByTitleServer) error {
+	googleBooks, err := a.googleSearchProducer.DoBooksSearchByTitle(v.Value)
+	if err != nil {
+		return err
+	}
+
+	for _, book := range googleBooks {
+		gRPCBook := builders.NewGrpcAlefBookstores(book)
+		log.Printf("sending the author %s \n", gRPCBook)
+		err := server.Send(gRPCBook)
+		if err != nil {
+			return fmt.Errorf("failed to send author %s to the client because %s", gRPCBook, err)
+		}
+	}
+	return nil
 }
 
-func (a AlefBookStoresSearchService) SearchForBookByAuthorName(value *wrapperspb.StringValue, server bibliotheca.AlefBookstoresSearchService_SearchForBookByAuthorNameServer) error {
-	//TODO implement me
-	panic("implement me")
+func (a AlefBookStoresSearchService) SearchForBookByAuthorName(v *wrapperspb.StringValue, server bibliotheca.AlefBookstoresSearchService_SearchForBookByAuthorNameServer) error {
+	googleBooks, err := a.googleSearchProducer.DoBooksSearchByAuthor(v.Value)
+	if err != nil {
+		return err
+	}
+
+	for _, book := range googleBooks {
+		gRPCBook := builders.NewGrpcAlefBookstores(book)
+		log.Printf("sending the author %s \n", gRPCBook)
+		err := server.Send(gRPCBook)
+		if err != nil {
+			return fmt.Errorf("failed to send author %s to the client because %s", gRPCBook, err)
+		}
+	}
+	return nil
 }
 
 func (a *AlefBookStoresSearchService) SearchForAuthorByName(v *wrapperspb.StringValue, server bibliotheca.AlefBookstoresSearchService_SearchForAuthorByNameServer) error {

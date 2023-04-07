@@ -39,6 +39,7 @@ func (c SearchClient) SearchForBookByTitle(ctx context.Context, title string) ([
 	books := []models.Book{}
 
 	conn := searchServiceConnectionPool.Get().(*grpc.ClientConn)
+	defer searchServiceConnectionPool.Put(conn)
 
 	client := pb.NewAlefBookstoresSearchServiceClient(conn)
 
@@ -65,6 +66,7 @@ func (c SearchClient) SearchForBookByAuthor(ctx context.Context, title string) (
 	books := []models.Book{}
 
 	conn := searchServiceConnectionPool.Get().(*grpc.ClientConn)
+	defer searchServiceConnectionPool.Put(conn)
 
 	client := pb.NewAlefBookstoresSearchServiceClient(conn)
 
@@ -91,6 +93,7 @@ func (c *SearchClient) SearchForAuthor(context context.Context, name string) ([]
 	authors := []models.Author{}
 
 	conn := searchServiceConnectionPool.Get().(*grpc.ClientConn)
+	defer searchServiceConnectionPool.Put(conn)
 
 	client := pb.NewAlefBookstoresSearchServiceClient(conn)
 
