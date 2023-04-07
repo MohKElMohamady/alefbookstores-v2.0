@@ -1,0 +1,4 @@
+github.com/joho/godotenv v1.5.1 h1:7eLL/+HRGLY0ldzfGMeQkb7vMd0as4CfYvUVzLqw0N0=
+github.com/joho/godotenv v1.5.1/go.mod h1:f4LDr5Voq0i2e/R5DDNOoa2zzDfwtkZa6DnEwAbqwq4=
+github.com/stargate/stargate-grpc-go-client v0.0.0-20220822130422-9a1c6261d4fa h1:cFAueB7cWa3hTm5cPWimRQ7uRJ/6aQjaPD6tR1IXSP4=
+github.com/stargate/stargate-grpc-go-client v0.0.0-20220822130422-9a1c6261d4fa/go.mod h1:OYbr6vMtTxG27lDdyadGIbUsvKWNC/XHhI4s/bjD1zw=
